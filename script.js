@@ -8,12 +8,12 @@ $(document).ready(function() {
     function getCityList() {
     
         var storedCities = JSON.parse(localStorage.getItem("cities"));
-    
+        
         if (storedCities !== null) {
-    
+            
             cities = storedCities;
         }
-
+        
         // Initial Render
         for (i=cities.length-1; i>=0; i--) {
             var li = $("<li>");
@@ -26,7 +26,7 @@ $(document).ready(function() {
     
     // Renders searched cities
     function renderCityList() {
-    
+        
         for (i=cities.length-1; i>=0; i--) {
 
             // Cities already rendered should not re-render
@@ -36,12 +36,12 @@ $(document).ready(function() {
             }
             
             else {
-
+                
                 // Render of newly searched city
                 var li = $("<li>");
                 li.append(cities[i]);
                 cityList.append(li);
-    
+                
             }
 
         }
@@ -49,13 +49,31 @@ $(document).ready(function() {
     
     function setCityList() {
         
-        // Push searched city to array
-        cities.push(cityInput.val());
+        // Do not allow cities to duplicate in array
+        
+        if (cities.length>0) {
+            for (i=0; i<(cities.length-1); i++) {
+                if (cities[i] === cityInput.val()) {
+
+                    // Removes last city of array if it is already in array
+                    cities.splice(cities.length-1, 1);
+                }
+
+                else {
+                    continue;
+                }
+            }
+        }
+
         // Update local storage
         localStorage.setItem("cities", JSON.stringify(cities));
-    
+        
         renderCityList();
     }
     
-    $(".submit-btn").on("click", setCityList);
+    $(".submit-btn").on("click", function() {
+
+        cities.push(cityInput.val());
+        setCityList(); 
+    });
 })
