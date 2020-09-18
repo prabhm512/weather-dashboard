@@ -85,6 +85,7 @@ $(document).ready(function() {
         }).then(function(response) {
             
             $(".display-5").text('');
+            $(".lead").text('');
 
             // City Name
             var city = response.name;
@@ -97,8 +98,9 @@ $(document).ready(function() {
             
             // City temperature in farenheit
             var temp = Math.round((response.main.temp - 273.15) * 1.80 + 32 , 2);
-            var info = $(".lead");;
-            info.append("Temperature: " + temp + " F");
+            var newPara = $("<p>").attr("class", "lead");
+            newPara.append("Temperature: " + temp + " F");
+            $(".jumbotron").append(newPara);
 
             // City humidity
 
