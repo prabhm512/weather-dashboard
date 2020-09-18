@@ -17,22 +17,31 @@
         <h1>Weather Dashboard</h1>
     </nav>
 
-    <div class="container search-list">
+    <div class="container app">
         <div class="row">
-            <div class="col-4">
-                <h3> Search for a City:</h3>
-                <form class="search-city">
-                    <input type="text" placeholder="Search.." name="search" id="city-input">
-                    <button type="submit" class="submit-btn"><i class="fa fa-search"></i></button>
-                  </form>
-                  <ul type="none" class="city-list"></ul>
+            <div class="col-4 search-list">
+                <div class="row">
+                    <div class="col-10">
+                        <h3>City:</h3>
+                        <form class="search-city">
+                            <input type="text" placeholder="Search.." name="search" id="city-input">
+                            <button type="submit" class="submit-btn"><i class="fa fa-search"></i></button>
+                          </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ul type="none" class="city-list"></ul>
+                    </div>
+                </div>
             </div>
+
             <div class="col-8">
                 <section class="city-info">
                     <div class="jumbotron">
                         <h1 class="display-4">Hello, world!</h1>
                         <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-                      </div>
+                    </div>
                 </section>
                 <section>
                     <h2>5-Day Forecast:</h2>
