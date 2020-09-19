@@ -73,4 +73,14 @@
     border: 1px solid black;
 }
 
+.forecast-header {
+    float: left;
+    margin-left: 5px;
+    background-color: #0b7dda;
+    color: white;
+    padding: 15px;
+}
 
+.idx-0 {
+    margin-left: 0px;
+}
