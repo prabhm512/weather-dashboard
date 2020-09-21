@@ -126,71 +126,65 @@ $(document).ready(function() {
             var lon = response.coord.lon;
             
             // URL for UV Index
-            var uvIndexURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey; 
+            var forecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey; 
 
-            // Server call for UV Index
+            // Server call for UV Index & Forecast
             $.ajax({
-                url: uvIndexURL,
+                url: forecastURL,
                 method: "GET"
             }).then(function(response) {
 
+                // UV Index
                 var newPara4 = $("<p>").attr("class", "lead");
-                newPara4.append("UV Index: " + response.value);
+                newPara4.append("UV Index: " + response.current.uvi);
                 $(".jumbotron").append(newPara4);
-            })
 
-            var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&exclude=current,minutely,hourly";
-
-            // Server call for forecast
-            $.ajax({
-                url: queryURL, 
-                method: "GET"
-            }).then(function(response) {
-                
                 // Remove previous 5 day forecast
                 $(".forecast-header").remove();
+                
+                // Five day forecast
+                for (i=1; i<6; i++) {
+    
+                    var newForecast = $("<p>").attr("class", "forecast-header idx-"+i);
+    
+                    // Date in Unix UTC format
+                    var unix_timestamp = response.daily[i].dt;
+    
+                    // Convert date to human readable form
+                    var date = new Date(unix_timestamp*1000);
+    
+                    // Month is indexed at 0 in date object hence forecast is one month off. Fixes that.
+                    var month = date.getMonth() + 1;
+    
+                    var newHeading = $("<p>").attr("class", "heading");
+                    newHeading.append(date.getDate() + "/" + month + "/" + date.getFullYear());
+                    newForecast.append(newHeading);
+    
+                    // Icons
+                    var iconCode = response.daily[i].weather[0].icon;
+                    var img = $("<img>");
+                    img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
+    
+                    // Render the icon
+                    var newIcon = $("<p>").attr("class", "forecast-detail");
+                    newIcon.append(img);
+                    newForecast.append(newIcon);
+    
+                    // Render temperature
+                    var newTemp = $("<p>").attr("class", "forecast-detail");
+                    var tempFarenheit = Math.round((response.daily[i].temp.day - 273.15) * 1.80 + 32 , 2);
+                    newTemp.append("Temp: " + tempFarenheit + " F");
+                    newForecast.append(newTemp);
+    
+                    // Render humidity
+                    var newHumidity = $("<p>").attr("class", "forecast-detail");
+                    newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
+                    newForecast.append(newHumidity);
+    
+                    $(".forecast").append(newForecast); 
 
-                    for (i=1; i<6; i++) {
-
-                        var newForecast = $("<p>").attr("class", "forecast-header idx-"+i);
-
-                        // Date in Unix UTC format
-                        var unix_timestamp = response.daily[i].dt;
-
-                        // Convert date to human readable form
-                        var date = new Date(unix_timestamp*1000);
-
-                        // Month is indexed at 0 in date object hence forecast is one month off. Fixes that.
-                        var month = date.getMonth() + 1;
-
-                        var newHeading = $("<p>").attr("class", "heading");
-                        newHeading.append(date.getDate() + "/" + month + "/" + date.getFullYear());
-                        newForecast.append(newHeading);
-
-                        // Icons
-                        var iconCode = response.daily[i].weather[0].icon;
-                        var img = $("<img>");
-                        img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
-
-                        // Render the icon
-                        var newIcon = $("<p>").attr("class", "forecast-detail");
-                        newIcon.append(img);
-                        newForecast.append(newIcon);
-
-                        // Render temperature
-                        var newTemp = $("<p>").attr("class", "forecast-detail");
-                        var tempFarenheit = Math.round((response.daily[i].temp.day - 273.15) * 1.80 + 32 , 2);
-                        newTemp.append("Temp: " + tempFarenheit + " F");
-                        newForecast.append(newTemp);
-
-                        // Render humidity
-                        var newHumidity = $("<p>").attr("class", "forecast-detail");
-                        newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
-                        newForecast.append(newHumidity);
-
-                        $(".forecast").append(newForecast);  
-                    }
-            })
+                }
+            })      
         })
     }
 
@@ -206,7 +200,7 @@ $(document).ready(function() {
     });
 
     // Stored city weather displayed on click
-    
+
     $(".city-list > li > button").on("click", function(event) {
         event.preventDefault();
 
