@@ -18,7 +18,10 @@ $(document).ready(function() {
         // Initial Render
         for (i=cities.length-1; i>=0; i--) {
             var li = $("<li>");
-            li.append(cities[i]);
+            var num = cities.length-i;
+            var button = $("<button>").attr("class", "button-"+num);
+            button.append(cities[i]);
+            li.append(button);
             cityList.append(li);
         }
     }
@@ -39,7 +42,10 @@ $(document).ready(function() {
              else {
                  // Render of newly searched city
                  var li = $("<li>");
-                 li.append(cities[i]);
+                 var num = cities.length-i;
+                 var button = $("<button>").attr("class", "button-"+num);
+                 button.append(cities[i]);
+                 li.append(button);
                  cityList.prepend(li);
              }
                        
@@ -146,15 +152,20 @@ $(document).ready(function() {
 
                     for (i=1; i<6; i++) {
 
-                        var newHeading = $("<p>").attr("class", "forecast-header idx-"+i);
+                        var newForecast = $("<p>").attr("class", "forecast-header idx-"+i);
 
                         // Date in Unix UTC format
                         var unix_timestamp = response.daily[i].dt;
 
                         // Convert date to human readable form
                         var date = new Date(unix_timestamp*1000);
-                        
-                        newHeading.append(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
+
+                        // Month is indexed at 0 in date object hence forecast is one month off. Fixes that.
+                        var month = date.getMonth() + 1;
+
+                        var newHeading = $("<p>").attr("class", "heading");
+                        newHeading.append(date.getDate() + "/" + month + "/" + date.getFullYear());
+                        newForecast.append(newHeading);
 
                         // Icons
                         var iconCode = response.daily[i].weather[0].icon;
@@ -164,19 +175,20 @@ $(document).ready(function() {
                         // Render the icon
                         var newIcon = $("<p>").attr("class", "forecast-detail");
                         newIcon.append(img);
-                        $(newHeading).append(newIcon);
+                        newForecast.append(newIcon);
 
                         // Render temperature
                         var newTemp = $("<p>").attr("class", "forecast-detail");
-                        newTemp.append("Temp: " + response.daily[i].temp.day + " F");
-                        $(newHeading).append(newTemp);
+                        var tempFarenheit = Math.round((response.daily[i].temp.day - 273.15) * 1.80 + 32 , 2);
+                        newTemp.append("Temp: " + tempFarenheit + " F");
+                        newForecast.append(newTemp);
 
                         // Render humidity
                         var newHumidity = $("<p>").attr("class", "forecast-detail");
                         newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
-                        $(newHeading).append(newHumidity);
+                        newForecast.append(newHumidity);
 
-                        $(".forecast").append(newHeading);  
+                        $(".forecast").append(newForecast);  
                     }
             })
         })
@@ -192,4 +204,14 @@ $(document).ready(function() {
 
         setCityList();
     });
+
+    // Stored city weather displayed on click
+    
+    $(".city-list > li > button").on("click", function(event) {
+        event.preventDefault();
+
+        cityInput.val($(this).text());
+
+        setCityList();
+    })
 });

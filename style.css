@@ -84,3 +84,16 @@
 .idx-0 {
     margin-left: 0px;
 }
+
+
+.heading {
+    font-weight: bold;
+}
+
+.city-list li button {
+    border: none;
+    background: none;
+    width: 255px;
+    text-align: left;
+    margin-left: -5px;
+}
