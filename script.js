@@ -226,7 +226,6 @@ $(document).ready(function () {
     cities.push(cityInput.val());
     setCityList();
     weatherDetails();
-    cityInput.val("");
 
     // Fade out search menu
     $("#myNav").fadeOut();
@@ -241,7 +240,6 @@ $(document).ready(function () {
 
     setCityList();
     weatherDetails();
-    cityInput.val("");
 
     // Fade out search menu
     $("#myNav").fadeOut();
