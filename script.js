@@ -40,8 +40,7 @@ $(document).ready(function () {
       } else {
         // Render of newly searched city
         var li = $("<li>");
-        var num = cities.length - i;
-        var button = $("<button>").attr("class", "button-" + num);
+        var button = $("<button>").attr("class", "button-" + i);
 
         // First letter of string is always capital and the rest lower case.
         button.append(
@@ -83,147 +82,147 @@ $(document).ready(function () {
     $.ajax({
       url: queryURL,
       method: "GET",
-    })
-      .then(function (response) {
-        $(".display-5").text("");
-        $(".lead").text("");
-
-        // City Name
-        var city = response.name;
-        var heading = $(".display-5");
-        heading.append(city + "  " + "(" + moment().format("D/M/YYYY") + ")");
-        var iconCode = response.weather[0].icon;
-        var img = $("<img>");
-        img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
-        heading.append(img);
-
-        // City temperature in farenheit
-        var temp = Math.round((response.main.temp - 273.15) * 1.8 + 32, 2);
-        var newPara1 = $("<p>").attr("class", "lead");
-        newPara1.append("Temperature: " + temp + " F");
-        $(".jumbotron").append(newPara1);
-
-        // City humidity
-
-        var humidity = response.main.humidity;
-        var newPara2 = $("<p>").attr("class", "lead");
-        newPara2.append("Humidity: " + humidity + "%");
-        $(".jumbotron").append(newPara2);
-
-        // City wind speed
-        var windSpeed = response.wind.speed;
-        var newPara3 = $("<p>").attr("class", "lead");
-        newPara3.append("Wind Speed: " + windSpeed + " MPH");
-        $(".jumbotron").append(newPara3);
-
-        // City latitude
-        var lat = response.coord.lat;
-
-        // City longitude
-        var lon = response.coord.lon;
-
-        // URL for UV Index
-        var forecastURL =
-          "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-          lat +
-          "&lon=" +
-          lon +
-          "&appid=" +
-          apiKey;
-
-        // Server call for UV Index & Forecast
-        $.ajax({
-          url: forecastURL,
-          method: "GET",
-        }).then(function (response) {
-          // UV Index
-          var newPara4 = $("<p>").attr("class", "lead");
-          newPara4.append("UV Index: ");
-
-          // Allow styling of only UV Index value
-          var uvi = $("<span>").attr("class", "uvi");
-          uvi.append("&nbsp;" + response.current.uvi + "&nbsp;");
-          newPara4.append(uvi);
-
-          $(".jumbotron").append(newPara4);
-
-          if (response.current.uvi >= 7.5) {
-            $(".uvi").css({ "background-color": "red" });
-          } else {
-            $(".uvi").css({ "background-color": "green" });
-          }
-
-          // Remove previous 5 day forecast
+      statusCode: {
+        404: function () {
+          $(".display-5").text("");
+          $(".lead").text("");
           $(".forecast-header").remove();
+          $(".display-5").text("No city with this name exists :(");
+          cities.pop();
+          cityInput.val("");
+        },
+      },
+    }).then(function (response) {
+      $(".display-5").text("");
+      $(".lead").text("");
+      $(".uvi").text("");
 
-          // Five day forecast
-          for (i = 1; i < 6; i++) {
-            var newForecast = $("<p>").attr(
-              "class",
-              "forecast-header idx-" + i
-            );
+      // City Name
+      var city = response.name;
+      var heading = $(".display-5");
+      heading.append(city + "  " + "(" + moment().format("D/M/YYYY") + ")");
+      var iconCode = response.weather[0].icon;
+      var img = $("<img>");
+      img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
+      heading.append(img);
 
-            // Date in Unix UTC format
-            var unix_timestamp = response.daily[i].dt;
+      // City temperature in farenheit
+      var temp = Math.round((response.main.temp - 273.15) * 1.8 + 32, 2);
+      var newPara1 = $("<p>").attr("class", "lead");
+      newPara1.append("Temperature: " + temp + " F");
+      $(".jumbotron").append(newPara1);
 
-            // Convert date to human readable form
-            var date = new Date(unix_timestamp * 1000);
+      // City humidity
 
-            // Month is indexed at 0 in date object hence forecast is one month off. Fixes that.
-            var month = date.getMonth() + 1;
+      var humidity = response.main.humidity;
+      var newPara2 = $("<p>").attr("class", "lead");
+      newPara2.append("Humidity: " + humidity + "%");
+      $(".jumbotron").append(newPara2);
 
-            var newHeading = $("<p>").attr("class", "heading");
-            newHeading.append(
-              date.getDate() + "/" + month + "/" + date.getFullYear()
-            );
-            newForecast.append(newHeading);
+      // City wind speed
+      var windSpeed = response.wind.speed;
+      var newPara3 = $("<p>").attr("class", "lead");
+      newPara3.append("Wind Speed: " + windSpeed + " MPH");
+      $(".jumbotron").append(newPara3);
 
-            // Icons
-            var iconCode = response.daily[i].weather[0].icon;
-            var img = $("<img>");
-            img.attr(
-              "src",
-              "http://openweathermap.org/img/w/" + iconCode + ".png"
-            );
+      // City latitude
+      var lat = response.coord.lat;
 
-            // Render the icon
-            var newIcon = $("<p>").attr("class", "forecast-detail");
-            newIcon.append(img);
-            newForecast.append(newIcon);
+      // City longitude
+      var lon = response.coord.lon;
 
-            // Render temperature
-            var newTemp = $("<p>").attr("class", "forecast-detail");
-            var tempFarenheit = Math.round(
-              (response.daily[i].temp.day - 273.15) * 1.8 + 32,
-              2
-            );
-            newTemp.append("Temp: " + tempFarenheit + " F");
-            newForecast.append(newTemp);
+      // URL for UV Index
+      var forecastURL =
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+        lat +
+        "&lon=" +
+        lon +
+        "&appid=" +
+        apiKey;
 
-            // Render humidity
-            var newHumidity = $("<p>").attr("class", "forecast-detail");
-            newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
-            newForecast.append(newHumidity);
+      // Server call for UV Index & Forecast
+      $.ajax({
+        url: forecastURL,
+        method: "GET",
+      }).then(function (response) {
+        // UV Index
+        var newPara4 = $("<p>").attr("class", "lead");
+        newPara4.append("UV Index: ");
 
-            $(".forecast").append(newForecast);
-          }
-        });
-        renderCityList();
-      })
-      .catch(function () {
-        $(".display-5").text("");
-        $(".lead").text("");
+        // Allow styling of only UV Index value
+        var uvi = $("<span>").attr("class", "uvi");
+        uvi.append("&nbsp;" + response.current.uvi + "&nbsp;");
+        newPara4.append(uvi);
+
+        $(".jumbotron").append(newPara4);
+
+        if (response.current.uvi >= 7.5) {
+          $(".uvi").css({ "background-color": "red" });
+        } else {
+          $(".uvi").css({ "background-color": "green" });
+        }
+
+        // Remove previous 5 day forecast
         $(".forecast-header").remove();
-        $(".display-5").text("No city with this name exists :(");
-        cities.pop();
-        cityInput.val("");
+
+        // Five day forecast
+        for (i = 1; i < 6; i++) {
+          var newForecast = $("<p>").attr("class", "forecast-header idx-" + i);
+
+          // Date in Unix UTC format
+          var unix_timestamp = response.daily[i].dt;
+
+          // Convert date to human readable form
+          var date = new Date(unix_timestamp * 1000);
+
+          // Month is indexed at 0 in date object hence forecast is one month off. Fixes that.
+          var month = date.getMonth() + 1;
+
+          var newHeading = $("<p>").attr("class", "heading");
+          newHeading.append(
+            date.getDate() + "/" + month + "/" + date.getFullYear()
+          );
+          newForecast.append(newHeading);
+
+          // Icons
+          var iconCode = response.daily[i].weather[0].icon;
+          var img = $("<img>");
+          img.attr(
+            "src",
+            "http://openweathermap.org/img/w/" + iconCode + ".png"
+          );
+
+          // Render the icon
+          var newIcon = $("<p>").attr("class", "forecast-detail");
+          newIcon.append(img);
+          newForecast.append(newIcon);
+
+          // Render temperature
+          var newTemp = $("<p>").attr("class", "forecast-detail");
+          var tempFarenheit = Math.round(
+            (response.daily[i].temp.day - 273.15) * 1.8 + 32,
+            2
+          );
+          newTemp.append("Temp: " + tempFarenheit + " F");
+          newForecast.append(newTemp);
+
+          // Render humidity
+          var newHumidity = $("<p>").attr("class", "forecast-detail");
+          newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
+          newForecast.append(newHumidity);
+
+          $(".forecast").append(newForecast);
+        }
       });
+      renderCityList();
+    });
   }
 
   $(".submit-btn").on("click", function (event) {
     event.preventDefault();
 
     cities.push(cityInput.val());
+
     setCityList();
     weatherDetails();
 
@@ -233,17 +232,18 @@ $(document).ready(function () {
 
   // Stored city weather displayed on click
 
-  $(".city-list > li > button").on("click", function (event) {
-    event.preventDefault();
+  for (i = 0; i <= cities.length; i++) {
+    $(".button-" + i).on("click", function (event) {
+      event.preventDefault();
 
-    cityInput.val($(this).text());
+      cityInput.val($(this).text());
 
-    setCityList();
-    weatherDetails();
+      weatherDetails();
 
-    // Fade out search menu
-    $("#myNav").fadeOut();
-  });
+      // Fade out search menu
+      $("#myNav").fadeOut();
+    });
+  }
 
   // Open search menu
   $(".openbtn").on("click", function () {
