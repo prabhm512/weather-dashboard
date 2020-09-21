@@ -74,7 +74,7 @@ $(document).ready(function() {
     function weatherDetails() {
 
         var apiKey = "8121c6d84a8446a068b7f404eff68899";
-        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput.val() + "&appid=8121c6d84a8446a068b7f404eff68899";
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput.val() + "&appid=" + apiKey;
         
         $.ajax({
             url: queryURL,
@@ -132,61 +132,55 @@ $(document).ready(function() {
                 newPara4.append("UV Index: " + response.value);
                 $(".jumbotron").append(newPara4);
             })
-        })
-        
-        fiveDayForecast();
-    }
-   
-    function fiveDayForecast() {
 
-        $(".forecast").text('');
-        
-        var forecastDates = [];
+            var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&exclude=current,minutely,hourly";
 
-            var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityInput.val() + "&appid=8121c6d84a8446a068b7f404eff68899";
-
+            // Server call for forecast
             $.ajax({
                 url: queryURL, 
                 method: "GET"
             }).then(function(response) {
-
-                // Push unique forecast dates to array
-                for (i=0; i<response.cnt-1; i++) {
-                    if (response.list[i].dt_txt.substr(0, response.list[i].dt_txt.indexOf(" ")) !== response.list[i+1].dt_txt.substr(0, response.list[i+1].dt_txt.indexOf(" "))) {
-                        forecastDates.push(response.list[i].dt_txt.substr(0, response.list[i].dt_txt.indexOf(" ")));
-                    }
-
-                    if (forecastDates.length > 5) {
-                        break;
-                    }
-                }
                 
-                for (i=0; i<5; i++) {
-                    var newHeading = $("<h5>").attr("class", "forecast-header" + " idx-" + i);
-                    $(".forecast").append(newHeading);
-                    var date = forecastDates[i];
-                    $(".idx-" + i).text(date);
-            
-                    // Icons
-                    var iconCode = response.list[i].weather[0].icon;
-                    var img = $("<img>");
-                    img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
-                    var newPara1 = $("<p>");
-                    newPara1.append(img);
-                    $(".idx-"+i).append(newPara1);
-            
-                    var temp = response.list[i].main.temp;
-                    var newPara2 = $("<p>");
-                    newPara2.append("Temp: " + temp + " F");
-                    $(".idx-"+i).append(newPara2);
-            
-                    var humidity = response.list[i].main.humidity;
-                    var newPara3 = $("<p>");
-                    newPara3.append("Humidity: "+ humidity + "%");
-                    $(".idx-"+i).append(newPara3);
-                }
+                // Remove previous 5 day forecast
+                $(".forecast-header").remove();
+
+                    for (i=1; i<6; i++) {
+
+                        var newHeading = $("<p>").attr("class", "forecast-header idx-"+i);
+
+                        // Date in Unix UTC format
+                        var unix_timestamp = response.daily[i].dt;
+
+                        // Convert date to human readable form
+                        var date = new Date(unix_timestamp*1000);
+                        
+                        newHeading.append(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
+
+                        // Icons
+                        var iconCode = response.daily[i].weather[0].icon;
+                        var img = $("<img>");
+                        img.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
+
+                        // Render the icon
+                        var newIcon = $("<p>").attr("class", "forecast-detail");
+                        newIcon.append(img);
+                        $(newHeading).append(newIcon);
+
+                        // Render temperature
+                        var newTemp = $("<p>").attr("class", "forecast-detail");
+                        newTemp.append("Temp: " + response.daily[i].temp.day + " F");
+                        $(newHeading).append(newTemp);
+
+                        // Render humidity
+                        var newHumidity = $("<p>").attr("class", "forecast-detail");
+                        newHumidity.append("Humidity: " + response.daily[i].humidity + "%");
+                        $(newHeading).append(newHumidity);
+
+                        $(".forecast").append(newHeading);  
+                    }
             })
-        }
+        })
+    }
 
     $(".submit-btn").on("click", function(event) {
         
