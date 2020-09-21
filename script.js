@@ -37,7 +37,12 @@ $(document).ready(function () {
         var li = $("<li>");
         var num = cities.length - i;
         var button = $("<button>").attr("class", "button-" + num);
-        button.append(cities[i]);
+
+        // First letter of string is always capital and the rest lower case.
+        button.append(
+          cities[i].substring(0, 1).toUpperCase() +
+            cities[i].substring(1).toLowerCase()
+        );
         li.append(button);
         cityList.prepend(li);
       }
@@ -49,7 +54,7 @@ $(document).ready(function () {
 
     if (cities.length > 0) {
       for (i = 0; i < cities.length - 1; i++) {
-        if (cities[i] === cityInput.val()) {
+        if (cities[i].toUpperCase() === cityInput.val().toUpperCase()) {
           // Removes last city of array if it is already in array
           cities.splice(cities.length - 1, 1);
         } else {
@@ -216,6 +221,7 @@ $(document).ready(function () {
     cities.push(cityInput.val());
     setCityList();
     weatherDetails();
+    cityInput.val("");
   });
 
   // Stored city weather displayed on click
@@ -227,5 +233,6 @@ $(document).ready(function () {
 
     setCityList();
     weatherDetails();
+    cityInput.val("");
   });
 });
