@@ -1,104 +1,199 @@
-
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
+.navbar-dark {
+  background-color: #111;
+}
 .navbar h1 {
-    color: white;
-    margin: auto;
+  color: white;
+  margin: auto;
 }
 
-  /* Style the search field */
-.search-city input[type=text] {
-    padding: 10px;
-    font-size: 17px;
-    border: 1px solid grey;
-    float: left;
-    width: 80%;
-    background: #f1f1f1;
-  }
-  
-  /* Style the submit button */
+.search-city {
+  margin-top: 20px;
+}
+
+/* Style the search field */
+.search-city input[type="text"] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+/* Style the submit button */
 .search-city button {
-    float: left;
-    width: 20%;
-    padding: 10px;
-    background: #2196F3;
-    color: white;
-    font-size: 17px;
-    border: 1px solid grey;
-    border-left: none; /* Prevent double borders */
-    cursor: pointer;
-  }
-  
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #2196f3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
 .search-city button:hover {
-    background: #0b7dda;
-  }
-  
-  /* Clear floats */
+  background: #0b7dda;
+}
+
+/* Clear floats */
 .search-city::after {
-    content: "";
-    clear: both;
-    display: table;
-  }
+  content: "";
+  clear: both;
+  display: table;
+}
 
 .app {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
-.card-title, .card-header {
-    margin: 0px -16px;
+.card-title,
+.card-header {
+  margin: 0px -16px;
 }
 
 .city-list {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 #city-input {
-    background-color: white;
+  background-color: white;
 }
 
-.city-list li{
-    background-color: white;
-    border: 1px solid rgba(128,128,128,0.3);
-    margin-left: -39px;
-    padding: 10px 10px 10px 20px;
+.city-list li {
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  margin-left: -39px;
+  padding: 10px 10px 10px 20px;
 }
 
-.search-list {
-    background-color: rgba(211,211,211,0.3);
-}
+/* .search-list {
+  background-color: rgba(211, 211, 211, 0.3);
+} */
 .jumbotron {
-    background-color: white;
-    border: 1px solid black;
+  background-color: white;
+  border: 1px solid black;
 }
 
 .forecast-header {
-    float: left;
-    margin-left: 5px;
-    background-color: #0b7dda;
-    color: white;
-    padding: 15px;
+  float: left;
+  margin-left: 5px;
+  background-color: #0b7dda;
+  color: white;
+  padding: 15px;
 }
 
 .idx-0 {
-    margin-left: 0px;
+  margin-left: 0px;
 }
 
-
 .heading {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .city-list li button {
-    border: none;
-    background: none;
-    width: 255px;
-    text-align: left;
-    margin-left: -5px;
+  border: none;
+  background: none;
+  width: 255px;
+  text-align: left;
+  margin-left: -5px;
 }
 
 .uvi {
-    color: white;
-    font-weight: bolder;
+  color: white;
+  font-weight: bolder;
+}
+
+/* The Overlay (background) */
+.overlay {
+  /* Height & width depends on how you want to reveal the overlay (see JS below) */
+  height: 100%;
+  width: 0;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  background-color: rgb(0, 0, 0); /* Black fallback color */
+  background-color: rgba(0, 0, 0, 0.9); /* Black w/opacity */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  position: relative;
+  top: 25%; /* 25% from the top */
+  width: 100%; /* 100% width */
+  text-align: center; /* Centered text/links */
+  margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block; /* Display block instead of inline */
+  transition: 0.3s; /* Transition effects on hover (color) */
+}
+
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover,
+.overlay a:focus {
+  color: #f1f1f1;
+}
+
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+  position: absolute;
+  top: -10px;
+  right: -70px;
+  font-size: 60px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  float: left;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#myNav {
+  width: 20%;
+}
+
+/* Breakpoint for iPad & iPad pro */
+@media screen and (max-width: 1024px) {
+  #myNav {
+    width: 50%;
+  }
+}
+
+/* Breakpoint for all smartphones */
+@media screen and (max-width: 450px) {
+  .overlay a {
+    font-size: 20px;
+  }
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+
+  #myNav {
+    width: 100%;
+  }
 }

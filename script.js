@@ -227,6 +227,9 @@ $(document).ready(function () {
     setCityList();
     weatherDetails();
     cityInput.val("");
+
+    // Fade out search menu
+    $("#myNav").fadeOut();
   });
 
   // Stored city weather displayed on click
@@ -239,5 +242,14 @@ $(document).ready(function () {
     setCityList();
     weatherDetails();
     cityInput.val("");
+
+    // Fade out search menu
+    $("#myNav").fadeOut();
+  });
+
+  // Open search menu
+  $(".openbtn").on("click", function () {
+    // Fade in search menu
+    $("#myNav").fadeIn();
   });
 });
