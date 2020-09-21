@@ -28,4 +28,4 @@ This mobile-reponsive application displays the current weather and 5-day forecas
 
 Ongoing...
 
-## <a href="https://prabhm512.github.io/weather-dashboard/">Deployed Project (click to view)</a>
+## <a href="https://prabhm512.github.io/weather-dashboard/" target="_blank">Deployed Project (click to view)</a>
