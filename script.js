@@ -247,6 +247,8 @@ $(document).ready(function () {
 
   // Open search menu
   $(".openbtn").on("click", function () {
+    // Allow actively generated button element to be clicked
+    location.reload();
     // Fade in search menu
     $("#myNav").fadeIn();
   });
