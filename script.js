@@ -66,9 +66,6 @@ $(document).ready(function () {
         }
       }
     }
-
-    // Update local storage
-    localStorage.setItem("cities", JSON.stringify(cities));
   }
 
   function weatherDetails() {
@@ -214,6 +211,9 @@ $(document).ready(function () {
           $(".forecast").append(newForecast);
         }
       });
+      // Update local storage
+      localStorage.setItem("cities", JSON.stringify(cities));
+
       renderCityList();
     });
   }
