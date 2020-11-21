@@ -8,7 +8,7 @@ SO THAT I can plan a trip accordingly
 
 ## Description
 
-This mobile-reponsive application displays the current weather and 5-day forecast of the input city.
+This mobile-first application displays the current weather and 5-day forecast of the input city.
 
 ## Tools & Technologies 
 
